@@ -13,61 +13,34 @@ public class Country_City {
         Cities=ReadFromHere("Cities.txt");
 
         //--------------------------------
-        Map<String, ArrayList<String>> firstmap = new HashMap<String, ArrayList<String>>();
-//        firstmap.put("SUP", new ArrayList<String>(
-//                Arrays.asList("Geeks",
-//                        "for",
-//                        "Geeks")));
-//        System.out.println(firstmap.get("SUP"));
-//        System.out.println(firstmap.get("asd"));
-//        firstmap.get("SUP").add("GEEK KMAN HENA");
-//        System.out.println(firstmap.get("SUP"));
+        Map<String, ArrayList<String>> cities_as_values_by_country_Code_Key = new HashMap<String, ArrayList<String>>();
         List<String> CountryCodes= new ArrayList<String>();
+        //got_coutries , didnt do anything with em
         for(String [] Counrty : Countries){
             CountryCodes.add(Counrty[0]);
         }
+
+        //got cities and added country code as key and cities as value
         for(String [] city: Cities){
-            if(firstmap.get(city[3])!=null){
-                firstmap.get(city[3]).add(city[1]);
+            if(cities_as_values_by_country_Code_Key.get(city[3])!=null){
+                cities_as_values_by_country_Code_Key.get(city[3]).add(city[1]);
             }
             else{
-                firstmap.put(city[3],new ArrayList<String>(Arrays.asList(city[1])));
+                cities_as_values_by_country_Code_Key.put(city[3],new ArrayList<String>(Arrays.asList(city[1])));
             }
 
         }
-        class comaprevalues implements Comparator<String[]>{
-            public int compare(String[] citywithvalue,String[] citywithvalue2)
-            {
-                int integer1=Integer.parseInt(citywithvalue[1].trim());
-                int integer2=Integer.parseInt(citywithvalue2[1].trim());
-//                System.out.print("VALUE IS : ");
-//                System.out.println(integer1);
-//                System.out.print("VALUE2 IS : ");
-//                System.out.println(integer2);
-                return integer1-integer2;
 
-            }
-        }
-        for (Map.Entry<String,ArrayList<String>> cities_by_country_code :firstmap.entrySet()){
+        for (Map.Entry<String,ArrayList<String>> cities_by_country_code : cities_as_values_by_country_Code_Key.entrySet()){
 
-//            System.out.print("Key is: "+ cities_by_country_code.getKey() + " & Value is: ");
-//
-//            System.out.println(cities_by_country_code.getValue());
-
-//            for(String cities :){
-//                for(String city : cities){
-//
-//                }
-//            }
             ArrayList<String[]> cities_with_population= new ArrayList<String[]>();
             for(String cityName : cities_by_country_code.getValue()){
-                //Map<String, Integer> cities_inThisCode = new HashMap<String,Integer>();
+
 
 //
                 for(String[]  cityInfoFromCsv : Cities) {
                     if (cityName.equals(cityInfoFromCsv[1])) {
-//                        System.out.print("FOUND COUNTRY WITH POPULATION : ");
-//                        System.out.println(cityInfoFromCsv[2]);
+                        //[1]City , [2]Population
                         cities_with_population.add(new String[]{cityInfoFromCsv[1], cityInfoFromCsv[2]});
 
                     }
@@ -84,17 +57,54 @@ public class Country_City {
                 System.out.println(cityInfo[1]);
             }
             System.out.println("----------------------------------------------------------------------------------");
+            System.out.print("Hightest City with population in this country is : ");
+            System.out.println(getMostPopBasedOnCountry(cities_with_population));
+
+            System.out.println("----------------------------------------------------------------------------------");
+
+            System.out.println("----------------------------------------------------------------------------------");
 
         }
+
+        List<String[]> Continent = new ArrayList<String[]>();
+        Continent=ReadFromHere("countryContinent.csv");
+
+        List<String[]> CountryCode_Continent = new ArrayList<String[]>();
+        Map<String, ArrayList<String>> country_Codes_by_continent = new HashMap<String, ArrayList<String>>();
+        //Collecting all country codes by continent
+        for(String [] country_code_continent: Continent)
+        {
+            if(country_Codes_by_continent.get(country_code_continent[5])!=null){
+                country_Codes_by_continent.get(country_code_continent[5]).add(country_code_continent[2]);
+            }
+            else{
+                country_Codes_by_continent.put(country_code_continent[5],new ArrayList<String>(Arrays.asList(country_code_continent[2])));
+            }
+
+        }
+        for (Map.Entry<String,ArrayList<String>> continent_with_coutnry_codes :country_Codes_by_continent.entrySet())
+        {
+            ArrayList<String[]> all_continent_cities_in_each_country= new ArrayList<String[]>();
+            for(String country_code : continent_with_coutnry_codes.getValue())
+            {
+                //all_continent_cities_in_each_country.addAll(cities_as_values_by_country_Code_Key.get(country_code))
+            }
+        }
+
+    }
+        //for (Map.Entry<String,ArrayList<String>> countries_in_one_continent :countries_by_continent.entrySet()){
+
 //        Set<String> uniqueCodes = new HashSet<String>(CountryCodes);
 //        System.out.println(CountryCodes);
 //        System.out.println(uniqueCodes);
 //        System.out.println(CountryCodes.size());
 //        System.out.println(uniqueCodes.size());
 
-
+    private static String getMostPopBasedOnCountry ( ArrayList<String[]> cities_with_population){
+        Collections.sort(cities_with_population,new comaprevalues());
+        String [] Single_city_with_population =cities_with_population.get(cities_with_population.size()-1);
+        return  Single_city_with_population[0];
     }
-
     private static List<String[]> ReadFromHere (String filename){
         List<String[]> Generic = new ArrayList<String[]>();
 
